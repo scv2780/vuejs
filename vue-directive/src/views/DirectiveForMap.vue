@@ -1,7 +1,7 @@
 <template>
   No: <input type="number" v-model="no" /><br /><br />
   이름: <input type="text" v-model="name" /><br /><br />
-  이름: <input type="text" v-model="phone" /><br /><br />
+  전화번호: <input type="text" v-model="phone" /><br /><br />
   <button v-on:click="addNewElement">추가</button>
   <div>
     <p v-for="(no, person) in mapRef" :key="person">
