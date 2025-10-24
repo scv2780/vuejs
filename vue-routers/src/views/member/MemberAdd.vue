@@ -14,14 +14,16 @@
     <form v-on:submit.prevent="onAdd">
       <dl>
         <dt><label for="">ID</label></dt>
-        <dd><input type="number" v-model.number="customers.id" /></dd>
+        <dd><input type="number" v-model.number="customers.userid" /></dd>
         <dt><label for="">이름</label></dt>
         <dd><input type="text" v-model="customers.name" /></dd>
         <dt><label for="">이메일</label></dt>
         <dd><input type="email" v-model="customers.email" /></dd>
-        <dt><label for="">포인트</label></dt>
-        <dd><input type="number" v-model.number="customers.phone" /></dd>
-        <dt><label for="">비고</label></dt>
+        <dt><label for="">비밀번호</label></dt>
+        <dd><input type="password" v-model="customers.password" /></dd>
+        <dt><label for="">전화번호</label></dt>
+        <dd><input type="text" v-model="customers.phone" /></dd>
+        <dt><label for="">주소</label></dt>
         <dd><input type="text" v-model="customers.address" /></dd>
       </dl>
       <button type="submit">추가</button>
@@ -39,29 +41,24 @@ import axios from "axios";
 const customers = ref({});
 
 // axios.post로 추가 만들어보기
-axios
-  .post("/customer", {
-    id: customers.value.id,
-    name: customers.value.name,
-    email: customers.value.email,
-    phone: customers.value.phone,
-    address: customers.value.address,
-  })
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
 
 const onAdd = () => {
-  customers.value.push({
-    id: customers.value.id,
-    name: customers.value.name,
-    email: customers.value.email,
-    phone: customers.value.phone,
-    address: customers.value.address,
-  }); // useRouter: .push 페이지 이동
+  axios
+    .post("http://localhost:3000/signup", {
+      userid: customers.value.userid,
+      name: customers.value.name,
+      email: customers.value.email,
+      password: customers.value.password,
+      phone: customers.value.phone,
+      address: customers.value.address,
+    })
+    .then((res) => {
+      console.log(res.data);
+      alert("회원정보가 추가되었습니다.");
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 };
 
 // data.

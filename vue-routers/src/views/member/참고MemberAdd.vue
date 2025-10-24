@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { reactive, inject } from "vue";
+import { reactive } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 import axios from "axios";
@@ -66,7 +66,7 @@ const member = reactive({
   phone: "",
 });
 
-const memberList = inject("memberList");
+// const memberList = inject("memberList");
 //함수
 const onAdd = () => {
   // memberList.set(member.id, member);
