@@ -32,15 +32,17 @@ onMounted(async () => {
 const post = computed(() => store.getPostById(id));
 
 const writeDate = computed(() => {
-  if (post.value.write_date) {
-    return new Date(post.value.write_date).toLocaleString();
-  }
-  return "";
+  const wd = post.value?.write_date;
+  return wd ? new Date(wd).toLocaleString() : "";
 });
 
 const modifyHandler = async () => {
-  const postId = route.params.id;
-  await store.modifyPost(postId);
+  if (!post.value) return;
+  await store.modifyPost(id, {
+    title: post.value.title,
+    content: post.value.content,
+    writer: post.value.writer,
+  });
   router.push({ name: "HomeView" });
 };
 </script>

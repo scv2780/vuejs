@@ -20,17 +20,13 @@ export const usePostStore = defineStore("post", () => {
   // action
   const addPost = async (newPost) => {
     const { data } = await axios.post("http://localhost:3000/board", { param: newPost });
-
-    // ✅ 서버가 어떤 키로 반환하든 안전하게 회수
-    const newId = data?.id ?? data?.insertId ?? data?.result?.insertId ?? data?.data?.id ?? null;
+    const newId = data?.id ?? null;
 
     if (newId == null) {
-      // ⚠️ id 못 받았으면 잘못된 항목을 푸시하지 말고 서버 기준으로 동기화
+      // 서버 결과가 애매하면 전체 다시 동기화
       await fetchPosts();
       return;
     }
-
-    // 정상일 때만 추가 (상단에 넣고 싶으면 unshift)
     posts.value.push({ ...newPost, id: Number(newId) });
   };
 
@@ -47,19 +43,44 @@ export const usePostStore = defineStore("post", () => {
   // };
 
   const deletePost = async (id) => {
-    await axios.delete(`http://localhost:3000/board/${id}`); // DB 삭제
-    posts.value = posts.value.filter((post) => post.id !== id); // 로컬 삭제
+    try {
+      await axios.delete(`http://localhost:3000/board/${id}`);
+      posts.value = posts.value.filter((post) => post.id !== Number(id));
+    } catch (err) {
+      console.error("deletePost error:", err);
+    }
   };
 
   const fetchPosts = async () => {
-    const response = await axios.get("http://localhost:3000/boards");
-    posts.value = response.data;
+    try {
+      const { data } = await axios.get("http://localhost:3000/boards");
+      // 서버에서 배열로 돌려주니 그대로 대입
+      posts.value = Array.isArray(data) ? data : [];
+    } catch (err) {
+      console.error("fetchPosts error:", err);
+      posts.value = [];
+    }
   };
 
   // 수정
-  const modifyPost = async () => {
-    const result = await axios.put(`http://localhost:3000/board/${id}`);
-    posts.value = result.data;
+  const modifyPost = async (id, payload) => {
+    try {
+      const { data } = await axios.put(`http://localhost:3000/board/${id}`, {
+        param: payload, // {title, content, writer}
+      });
+      if (data?.affectedRows > 0) {
+        // 로컬도 갱신
+        const idx = posts.value.findIndex((p) => p.id === Number(id));
+        if (idx !== -1) {
+          posts.value[idx] = { ...posts.value[idx], ...payload };
+        }
+      } else {
+        // 서버 기준으로 다시 가져와서 동기화
+        await fetchPosts();
+      }
+    } catch (err) {
+      console.error("modifyPost error:", err);
+    }
   };
 
   return { posts, getPostById, addPost, deletePost, fetchPosts, modifyPost };

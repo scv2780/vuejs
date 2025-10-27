@@ -1,16 +1,17 @@
 <template>
   <h3>상세화면</h3>
-  <div>
+  <div v-if="post">
     <h3>제목: {{ post.title }}</h3>
     <p>내용: {{ post.content }}</p>
     <p>
       <em>작성자: {{ post.writer }}</em>
     </p>
     <p>작성일시: {{ writeDate }}</p>
-    <button v-on:click="deletePostHandler">삭제</button>
+    <button @click="deletePostHandler">삭제</button>
     <RouterLink to="/">목록으로</RouterLink>
-    <p><RouterLink to="{ name: 'ModifyView', params: { id: post.id } }">수정하기</RouterLink></p>
+    <p><RouterLink :to="{ name: 'ModifyView', params: { id: post.id } }">수정하기</RouterLink></p>
   </div>
+  <div v-else>로딩 중…</div>
 </template>
 
 <script setup>
@@ -38,10 +39,8 @@ onMounted(async () => {
 const post = computed(() => store.getPostById(id));
 
 const writeDate = computed(() => {
-  if (post.value.write_date) {
-    return new Date(post.value.write_date).toLocaleString();
-  }
-  return "";
+  const wd = post.value?.write_date;
+  return wd ? new Date(wd).toLocaleString() : "";
 });
 
 // onMounted(async () => {
