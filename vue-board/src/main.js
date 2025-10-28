@@ -10,3 +10,7 @@ app.use(createPinia());
 app.use(router);
 
 app.mount("#app");
+
+// 로그인 상태 복원
+import { useAuthStore } from "@/stores/auth.js";
+useAuthStore().restore();

@@ -1,14 +1,12 @@
 <template>
-  <div class="board-page">
-    <h2>게시글 목록</h2>
-    <ul>
+  <div class="list-wrap">
+    <h3 class="list-title">게시글 목록</h3>
+    <ul class="list-grid">
       <li class="post-card" v-for="post in posts" :key="post.id">
-        <h4>
-          <RouterLink v-bind:to="{ name: 'ModifyView', params: { id: post.id } }">{{
-            post.title
-          }}</RouterLink>
+        <h4 class="post-title">
+          <RouterLink :to="`/post/${post.id}`">{{ post.title }}</RouterLink>
         </h4>
-        <p>{{ post.content }}</p>
+        <p class="post-content">{{ post.content }}</p>
         <span class="writer">작성자: {{ post.writer }}</span>
       </li>
     </ul>
@@ -20,30 +18,22 @@ import { defineProps } from "vue";
 import { RouterLink } from "vue-router";
 
 defineProps({
-  posts: {
-    type: Array,
-    required: true,
-  },
+  posts: { type: Array, required: true },
 });
 </script>
 
 <style scoped>
-.board-page {
-  max-width: 800px;
-  margin: 60px auto;
-  padding: 0 20px;
-  font-family: "Pretendard", "Noto Sans KR", sans-serif;
-  color: #1a1a1a;
+.list-wrap {
 }
-
-.board-page h2 {
-  font-size: 26px;
+.list-title {
+  font-size: 20px;
   font-weight: 800;
-  margin-bottom: 25px;
-  color: #111827;
+  margin: 0 0 14px;
+  color: #ff3b3b;
 }
 
-ul {
+/* 그리드 */
+.list-grid {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -51,38 +41,54 @@ ul {
   gap: 16px;
 }
 
+/* 카드 */
 .post-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
   border-radius: 12px;
-  padding: 20px 22px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  padding: 18px 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
   transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+    transform 0.15s,
+    box-shadow 0.15s,
+    border-color 0.15s;
 }
-
 .post-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 10px 28px rgba(255, 59, 59, 0.18);
+  border-color: #ff3b3b55;
 }
 
-.post-card h4 {
+/* 텍스트 */
+.post-title {
   margin: 0 0 8px;
   font-size: 18px;
   font-weight: 700;
-  color: #111827;
+}
+.post-title a {
+  color: #ffffff;
+  text-decoration: none;
+}
+.post-title a:hover {
+  color: #ffb3b3;
+  text-decoration: underline;
 }
 
-.post-card p {
+.post-content {
   margin: 0 0 10px;
-  color: #4b5563;
+  color: #cfcfcf;
   line-height: 1.6;
 }
-
 .writer {
-  font-size: 14px;
-  color: #ccc;
+  font-size: 13px;
+  color: #9aa0a6;
   font-weight: 600;
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+  .post-card {
+    padding: 14px 16px;
+  }
 }
 </style>

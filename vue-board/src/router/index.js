@@ -23,6 +23,11 @@ const router = createRouter({
       component: () => import("@/views/ModifyView.vue"),
       props: (route) => ({ id: Number(route.params.id) }),
     },
+    {
+      path: "/login",
+      name: "LoginView",
+      component: () => import("@/views/LoginView.vue"),
+    },
     // {
     //   path: "/about",
     //   name: "about",

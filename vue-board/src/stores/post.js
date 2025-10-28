@@ -1,10 +1,12 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import axios from "axios";
+import { useAuthStore } from "./auth.js";
 // import { useRoute } from "vue-router";
 
 export const usePostStore = defineStore("post", () => {
   const posts = ref([]); // state
+  const replys = ref([]); // state
 
   // getter
   const getPostById = computed(() => {
@@ -19,16 +21,32 @@ export const usePostStore = defineStore("post", () => {
 
   // action
   const addPost = async (newPost) => {
-    const { data } = await axios.post("http://localhost:3000/board", { param: newPost });
-    const newId = data?.id ?? null;
-
-    if (newId == null) {
-      // 서버 결과가 애매하면 전체 다시 동기화
-      await fetchPosts();
+    const auth = useAuthStore();
+    if (!auth.isLoggedIn) {
+      alert("로그인이 필요합니다.");
       return;
     }
-    posts.value.push({ ...newPost, id: Number(newId) });
+    const payload = {
+      title: newPost.title,
+      content: newPost.content,
+      writer: auth.nickname, // ★ 여기서 작성자 설정
+    };
+    const { data } = await axios.post("http://localhost:3000/board", { param: payload });
+    const newId = data?.id ?? null;
+    if (!newId) return fetchPosts();
+    posts.value.push({ id: Number(newId), ...payload, write_date: new Date().toISOString() });
   };
+  // const addPost = async (newPost) => {
+  //   const { data } = await axios.post("http://localhost:3000/board", { param: newPost });
+  //   const newId = data?.id ?? null;
+
+  //   if (newId == null) {
+  //     // 서버 결과가 애매하면 전체 다시 동기화
+  //     await fetchPosts();
+  //     return;
+  //   }
+  //   posts.value.push({ ...newPost, id: Number(newId) });
+  // };
 
   // | 백엔드 종류             | 응답 예시                      | 우리가 꺼내야 하는 키      |
   // | --------------------    | ----------------------------- | ----------------- |
@@ -62,6 +80,18 @@ export const usePostStore = defineStore("post", () => {
     }
   };
 
+  const fetchreply = async (id) => {
+    try {
+      const { data } = await axios.get(`http://localhost:3000/reply/${id}`);
+      // 서버에서 배열로 돌려주니 그대로 대입
+      replys.value = Array.isArray(data) ? data : [];
+      return data;
+    } catch (err) {
+      console.error("fetchPosts error:", err);
+      replys.value = [];
+    }
+  };
+
   // 수정
   const modifyPost = async (id, payload) => {
     try {
@@ -83,5 +113,5 @@ export const usePostStore = defineStore("post", () => {
     }
   };
 
-  return { posts, getPostById, addPost, deletePost, fetchPosts, modifyPost };
+  return { replys, posts, getPostById, addPost, deletePost, fetchPosts, fetchreply, modifyPost };
 });

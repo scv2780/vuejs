@@ -57,84 +57,91 @@ const addPostHandler = async () => {
 </script>
 
 <style scoped>
-/* ===== 전체 페이지 레이아웃 ===== */
+/* 페이지 컨테이너 (이 파일 안에서만 책임) */
 .page-container {
   max-width: 700px;
-  margin: 60px auto;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 40px 45px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-  font-family: "Pretendard", "Noto Sans KR", sans-serif;
-  color: #1a1a1a;
+  margin: 50px auto;
+  padding: 24px;
+  background-color: #2a2a2a;
+  color: #f5f5f5;
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
 }
 
-/* ===== 제목 ===== */
 .page-container h2 {
-  font-size: 26px;
+  margin: 0 0 18px;
+  color: #ff3b3b;
+  font-size: 24px;
   font-weight: 800;
-  margin-bottom: 30px;
-  color: #111827;
 }
 
-/* ===== 입력 폼 ===== */
+/* 폼 */
 .form-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-label {
-  font-weight: 600;
-  color: #555;
-  margin-bottom: 6px;
-  font-size: 15px;
+.form-group label {
+  font-size: 14px;
+  color: #eaeaea;
 }
 
-input,
-textarea {
-  background: #f9fafb;
-  border: 1px solid #d1d5db;
+/* 인풋/텍스트에어리어 공통 */
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #3d3d3d;
+  border-radius: 8px;
+  padding: 10px 12px;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #8e8e8e;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #ff3b3b;
+  box-shadow: 0 0 0 3px rgba(255, 59, 59, 0.15);
+}
+
+/* 버튼 */
+.submit-btn {
+  width: 100%;
+  background: #ff3b3b;
+  color: #fff;
+  border: 0;
   border-radius: 10px;
   padding: 12px 14px;
-  font-size: 15px;
-  color: #111827;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-input:focus,
-textarea:focus {
-  border-color: #ff4d4d;
-  box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.25);
-  outline: none;
-}
-
-/* ===== 버튼 ===== */
-.submit-btn {
-  margin-top: 10px;
-  width: 100%;
-  background: #5457ff;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
   font-weight: 700;
-  padding: 14px 0;
   cursor: pointer;
   transition:
-    background-color 0.2s,
-    transform 0.15s;
+    background 0.2s ease,
+    transform 0.06s ease;
 }
 
 .submit-btn:hover {
-  background: #7174ff;
-  transform: translateY(-2px);
+  background: #ff5b5b;
 }
 
 .submit-btn:active {
-  transform: translateY(0);
+  transform: translateY(1px);
+}
+/* 모바일 간격 */
+@media (max-width: 640px) {
+  .page-container {
+    margin: 24px auto;
+    padding: 18px;
+  }
 }
 </style>

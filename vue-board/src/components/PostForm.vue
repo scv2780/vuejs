@@ -1,10 +1,10 @@
 <template>
-  <div class="page-container">
-    <h2>글 작성</h2>
-    <form v-on:submit.prevent="addPostHandler">
+  <div class="write-card">
+    <h3 class="write-title">글 작성</h3>
+    <form class="write-form" @submit.prevent="addPostHandler">
       <div class="form-group">
         <label for="title">제목</label>
-        <input type="text" id="title" v-model="title" placeholder="제목을 입력하세요" required />
+        <input id="title" v-model="title" placeholder="제목을 입력하세요" required />
       </div>
 
       <div class="form-group">
@@ -12,132 +12,107 @@
         <textarea
           id="content"
           v-model="content"
+          rows="7"
           placeholder="내용을 입력하세요"
-          rows="8"
         ></textarea>
       </div>
 
-      <div class="form-group">
-        <label for="writer">작성자</label>
-        <input id="writer" v-model="writer" placeholder="닉네임 또는 이름" required />
-      </div>
-
-      <button type="submit" class="submit-btn">등록하기</button>
+      <button type="submit" class="btn-primary">등록하기</button>
     </form>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-
-//inject 함수로 addPost 함수 주입
 import { usePostStore } from "@/stores/post";
-const postStore = usePostStore(); // pinia 스토어 사용
-const { addPost } = postStore; // addPost 함수 호출
 
-// 폼 데이터 상태 관리
+const postStore = usePostStore();
+const { addPost } = postStore;
+
 const title = ref("");
 const content = ref("");
-const writer = ref("");
 
-// 폼 제출 핸들러
 const addPostHandler = async () => {
-  if (!title.value || !content.value || !writer.value) {
+  if (!title.value || !content.value) {
     alert("모든 필드를 작성해주세요.");
     return;
   }
-  const newPost = {
+  await addPost({
     title: title.value,
     content: content.value,
-    writer: writer.value,
-  };
-  await addPost(newPost);
-  // 폼 초기화
+    writer: "", // (로그인 닉네임을 자동 사용하고 싶으면 여기에 주입하도록 추후 개선)
+  });
   title.value = "";
   content.value = "";
-  writer.value = "";
 };
 </script>
 
 <style scoped>
-/* ===== 전체 페이지 레이아웃 ===== */
-.page-container {
-  max-width: 700px;
-  margin: 60px auto;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 40px 45px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-  font-family: "Pretendard", "Noto Sans KR", sans-serif;
-  color: #1a1a1a;
+.write-card {
 }
-
-/* ===== 제목 ===== */
-.page-container h2 {
-  font-size: 26px;
+.write-title {
+  margin: 0 0 14px;
+  color: #ff3b3b;
+  font-size: 20px;
   font-weight: 800;
-  margin-bottom: 30px;
-  color: #111827;
 }
 
-/* ===== 입력 폼 ===== */
+/* 폼 */
+.write-form {
+  display: grid;
+  gap: 14px;
+}
 .form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
+  display: grid;
+  gap: 8px;
+}
+.form-group label {
+  font-size: 14px;
+  color: #eaeaea;
 }
 
-label {
-  font-weight: 600;
-  color: #555;
-  margin-bottom: 6px;
-  font-size: 15px;
+/* 인풋 공통 */
+.write-form input,
+.write-form textarea {
+  width: 100%;
+  background: #1e1e1e;
+  color: #fff;
+  border: 1px solid #3d3d3d;
+  border-radius: 8px;
+  padding: 10px 12px;
+  outline: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.write-form input::placeholder,
+.write-form textarea::placeholder {
+  color: #8e8e8e;
+}
+.write-form input:focus,
+.write-form textarea:focus {
+  border-color: #ff3b3b;
+  box-shadow: 0 0 0 3px rgba(255, 59, 59, 0.15);
 }
 
-input,
-textarea {
-  background: #f9fafb;
-  border: 1px solid #d1d5db;
+/* 버튼 */
+.btn-primary {
+  width: 100%;
+  background: #ff3b3b;
+  color: #fff;
+  border: 0;
   border-radius: 10px;
   padding: 12px 14px;
-  font-size: 15px;
-  color: #111827;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-input:focus,
-textarea:focus {
-  border-color: #ff4d4d;
-  box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.25);
-  outline: none;
-}
-
-/* ===== 버튼 ===== */
-.submit-btn {
-  margin-top: 10px;
-  width: 100%;
-  background: #5457ff;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
   font-weight: 700;
-  padding: 14px 0;
   cursor: pointer;
   transition:
-    background-color 0.2s,
-    transform 0.15s;
+    background 0.2s,
+    transform 0.06s;
 }
-
-.submit-btn:hover {
-  background: #7174ff;
-  transform: translateY(-2px);
+.btn-primary:hover {
+  background: #ff5b5b;
 }
-
-.submit-btn:active {
-  transform: translateY(0);
+.btn-primary:active {
+  transform: translateY(1px);
 }
 </style>
