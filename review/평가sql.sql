@@ -1,5 +1,7 @@
 USE dev;
+
 drop table board_tbl, comment_tbl;
+
 CREATE TABLE `dev`.`board_tbl` (
   `no` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(1000) NOT NULL,

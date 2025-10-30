@@ -1,5 +1,5 @@
 require("dotenv").config({ path: "./database/dbConfig.env" });
-console.log(process.env);
+// console.log(process.env);
 const express = require("express");
 const app = express();
 const port = 3000;

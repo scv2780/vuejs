@@ -25,7 +25,7 @@
       </tbody>
     </table>
     <div>
-      <button class="btn btn-primary" @click="goToboardUpdate">수정</button>
+      <button class="btn btn-primary" @click="goToboardUpdate(boardInfo.no)">수정</button>
     </div>
     <hr />
   </div>
@@ -38,8 +38,10 @@ import dateFormat from "@/utils/dateFormat.js";
 import axios from "axios";
 import { onBeforeMount, ref } from "vue";
 import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 
 const route = useRoute();
+const router = useRouter();
 let boardInfo = ref({}); // 게시글 정보
 
 const getBoardInfo = async (bno) => {
@@ -51,4 +53,8 @@ onBeforeMount(() => {
   const boardNo = route.query.no;
   getBoardInfo(boardNo);
 });
+
+const goToboardUpdate = (bno) => {
+  router.push({ name: "boardUpdate", query: { no: bno } });
+};
 </script>

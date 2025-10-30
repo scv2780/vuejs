@@ -29,6 +29,14 @@ router.post(`/boards`, async (req, res) => {
   res.send(result);
 });
 // 수정     : URI = /boards/:bno, METHOD = PUT
+router.put(`/boards/:bno`, async (req, res) => {
+  let updateInfo = req.body;
+  let no = req.params.bno;
+  let result = await boardService
+    .updateBoard(updateInfo, no)
+    .catch((err) => console.log(err));
+  res.send(result);
+});
 
 // 삭제     : URI = /boards/:bno, METHOD = DELETE
 
