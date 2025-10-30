@@ -54,6 +54,7 @@ const updateBoard = async (boardInfo, bno) => {
   let result = await mysql
     .query("boardUpdate", updateData)
     .catch((err) => console.log(err));
+  // console.log(result);
   // result 예시
   // OkPacket { affectedRows: 1, insertId: 0, warningStatus: 0 }
   // affectedRows : 실행된 쿼리로 인해 영향을 받은 행(Row) 의 개수
