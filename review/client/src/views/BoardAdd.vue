@@ -28,7 +28,7 @@ import dateFormat from "@/utils/dateFormat";
 import axios from "axios";
 
 const boardInfo = reactive({
-  // reactive 객체 자체가 변하는게 아니라 값만 변할때, ref 보다 가벼움
+  // reactive 객체 자체가 변하는게 아니라 필드만 변할 수 있음, ref 보다 가벼움
   no: "",
   title: "",
   writer: "",
